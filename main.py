@@ -39,14 +39,17 @@ textData = '''10 : Name (type: System.String)
 '''
 
 def parseClassName(cName):
-    if cName == 'System.String':
-        return 'UnicodeString*'
-    if cName == 'System.Int32':
-        return 'int'
-    if cName == 'System.Single':
-        return 'float'
-    if cName == 'System.Boolean':
-        return 'bool'
+    if cName[-2:] == '[]':
+        return 'Array<' + parseClassName(cName[:-2]) + '>*'
+    else:
+        if cName == 'System.String':
+            return 'UnicodeString*'
+        if cName == 'System.Int32':
+            return 'int'
+        if cName == 'System.Single':
+            return 'float'
+        if cName == 'System.Boolean':
+            return 'bool'
     return cName
 
 def parseLine(input):
