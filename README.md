@@ -84,10 +84,10 @@ int RepairCost; // 0xBC
 int RepairSpeed; // 0xC0
 bool MergesWithChildren; // 0xC4
 char pad_XXX[0x3]; // XXX
-System.String[] ConflictingItems; // 0x40
+Array<UnicodeString*>* ConflictingItems; // 0x40
 UnicodeString* _id; // 0x48
 UnicodeString* _name; // 0x50
 UnicodeString* _parent; // 0x58
 EFT.InventoryLogic.NodeType _type; // 0xC8
-顓€[] _items; // 0x60
+Array<顓€>* _items; // 0x60
 ```
