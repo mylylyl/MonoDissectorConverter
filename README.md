@@ -1,93 +1,76 @@
 # MonoDissectorConverter
-Convert Mono Dissector's Output to C++ style
+Convert output of Cheat Engine's Mono Dissector to C++ style code
 
-A little converter for my handy usage on Unity Games.
+This is a handy tool for my personal project, and it's only for educational purposes
 
-UnicodeString is my implemetation of System.String
+UnicodeString is my implementation of System.String
 
-# Example
-input:
-```cpp
-10 : Name (type: System.String)
-				18 : ShortName (type: System.String)
-				20 : Description (type: System.String)
-				68 : Weight (type: System.Single)
-				6c : ExaminedByDefault (type: System.Boolean)
-				70 : ExamineTime (type: System.Single)
-				74 : QuestItem (type: System.Boolean)
-				78 : BackgroundColor (type: JsonType.TaxonomyColor)
-				7c : Width (type: System.Int32)
-				80 : Height (type: System.Int32)
-				84 : ExtraSizeLeft (type: System.Int32)
-				88 : ExtraSizeRight (type: System.Int32)
-				8c : ExtraSizeUp (type: System.Int32)
-				90 : ExtraSizeDown (type: System.Int32)
-				94 : ExtraSizeForceAdd (type: System.Boolean)
-				98 : StackMaxSize (type: System.Int32)
-				9c : StackObjectsCount (type: System.Int32)
-				a0 : CreditsPrice (type: System.Int32)
-				28 : ItemSound (type: System.String)
-				30 : Prefab (type: EFT.ResourceKey)
-				38 : UsePrefab (type: EFT.ResourceKey)
-				a4 : Rarity (type: JsonType.ELootRarity)
-				a8 : SpawnChance (type: System.Single)
-				ac : NotShownInSlot (type: System.Boolean)
-				b0 : LootExperience (type: System.Int32)
-				b4 : HideEntrails (type: System.Boolean)
-				b8 : ExamineExperience (type: System.Int32)
-				bc : RepairCost (type: System.Int32)
-				c0 : RepairSpeed (type: System.Int32)
-				c4 : MergesWithChildren (type: System.Boolean)
-				40 : ConflictingItems (type: System.String[])
-				48 : _id (type: System.String)
-				50 : _name (type: System.String)
-				58 : _parent (type: System.String)
-				c8 : _type (type: EFT.InventoryLogic.NodeType)
-				60 : _items (type: [])
+
+
+Current this script only support the exact formatting of output file of Mono Dissector which looks like this
+
+```
+Header (usually an address, 0 indent)
+	File Header (usually an address with file name, 1 indent)
+		Package Header (usually an address with package name, 2 indents)
+			fields (declearing the following content to be "fields", 3 indents)
+				variables_and_offsets (4 indents)
+            methods (declearing the following content to be "methods", 3 indents)
+            	methods_and_offsets (4 inddents)
 ```
 
-output:
+
+
+# Example
+
+Input:
+
 ```cpp
-UnicodeString* Name; // 0x10
-UnicodeString* ShortName; // 0x18
-UnicodeString* Description; // 0x20
-float Weight; // 0x68
-bool ExaminedByDefault; // 0x6C
-char pad_XXX[0x3]; // XXX
-float ExamineTime; // 0x70
-bool QuestItem; // 0x74
-char pad_XXX[0x3]; // XXX
-JsonType.TaxonomyColor BackgroundColor; // 0x78
-int Width; // 0x7C
-int Height; // 0x80
-int ExtraSizeLeft; // 0x84
-int ExtraSizeRight; // 0x88
-int ExtraSizeUp; // 0x8C
-int ExtraSizeDown; // 0x90
-bool ExtraSizeForceAdd; // 0x94
-char pad_XXX[0x3]; // XXX
-int StackMaxSize; // 0x98
-int StackObjectsCount; // 0x9C
-int CreditsPrice; // 0xA0
-UnicodeString* ItemSound; // 0x28
-EFT.ResourceKey Prefab; // 0x30
-EFT.ResourceKey UsePrefab; // 0x38
-JsonType.ELootRarity Rarity; // 0xA4
-float SpawnChance; // 0xA8
-bool NotShownInSlot; // 0xAC
-char pad_XXX[0x3]; // XXX
-int LootExperience; // 0xB0
-bool HideEntrails; // 0xB4
-char pad_XXX[0x3]; // XXX
-int ExamineExperience; // 0xB8
-int RepairCost; // 0xBC
-int RepairSpeed; // 0xC0
-bool MergesWithChildren; // 0xC4
-char pad_XXX[0x3]; // XXX
-Array<UnicodeString*>* ConflictingItems; // 0x40
-UnicodeString* _id; // 0x48
-UnicodeString* _name; // 0x50
-UnicodeString* _parent; // 0x58
-EFT.InventoryLogic.NodeType _type; // 0xC8
-Array<顓€>* _items; // 0x60
+FileHeader
+	52cd540 : Assembly-CSharp
+		276f8f40 : System.IO:FileStreamAsyncResult
+			fields
+				10 : state (type: System.Object)
+				18 : completed (type: System.Boolean)
+				19 : done (type: System.Boolean)
+				20 : exc (type: System.Exception)
+				28 : wh (type: System.Threading.ManualResetEvent)
+				30 : cb (type: System.AsyncCallback)
+				38 : completedSynch (type: System.Boolean)
+				40 : Buffer (type: System.Byte[])
+				48 : Offset (type: System.Int32)
+				4c : Count (type: System.Int32)
+				50 : OriginalCount (type: System.Int32)
+				54 : BytesRead (type: System.Int32)
+				58 : realcb (type: System.AsyncCallback)
+			methods
+				2788f5d0 : .ctor
+				2788f600 : CBWrapper
+				2788f630 : SetComplete
+				2788f660 : SetComplete
+				2788f690 : SetComplete
+				276e9368 : get_AsyncState
+				276e9398 : get_CompletedSynchronously
+				276e93c8 : get_AsyncWaitHandle
+				276e93f8 : get_IsCompleted
+				2788f6c0 : get_Exception
+				2788f6f0 : get_Done
+				2788f720 : set_Done
+```
+
+Output:
+```cpp
+System_Object*  state;          //0x10
+bool    completed;              //0x18
+bool    done;           //0x19
+System_Exception*       exc;            //0x20
+System_Threading_ManualResetEvent*      wh;             //0x28
+System_AsyncCallback*   cb;             //0x30
+bool    completedSynch;         //0x38
+Array<uint8_t>* Buffer;         //0x40
+int32_t Offset;         //0x48
+int32_t Count;          //0x4c
+int32_t OriginalCount;          //0x50
+int32_t BytesRead;              //0x54
+System_AsyncCallback*   realcb;         //0x58
 ```
