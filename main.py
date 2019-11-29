@@ -4,34 +4,56 @@ import math
 
 textData = """FileHeader
 	52cd540 : Assembly-CSharp
-		276f8f40 : System.IO:FileStreamAsyncResult
+		17876c2abe0 : System.IO.FileStreamAsyncResult
+			static fields
 			fields
 				10 : state (type: System.Object)
-				18 : completed (type: System.Boolean)
-				19 : done (type: System.Boolean)
-				20 : exc (type: System.Exception)
-				28 : wh (type: System.Threading.ManualResetEvent)
-				30 : cb (type: System.AsyncCallback)
-				38 : completedSynch (type: System.Boolean)
-				40 : Buffer (type: System.Byte[])
-				48 : Offset (type: System.Int32)
-				4c : Count (type: System.Int32)
-				50 : OriginalCount (type: System.Int32)
-				54 : BytesRead (type: System.Int32)
-				58 : realcb (type: System.AsyncCallback)
+				40 : completed (type: System.Boolean)
+				41 : done (type: System.Boolean)
+				18 : exc (type: System.Exception)
+				20 : wh (type: System.Threading.ManualResetEvent)
+				28 : cb (type: System.AsyncCallback)
+				42 : completedSynch (type: System.Boolean)
+				30 : Buffer (type: System.Byte[])
+				44 : Offset (type: System.Int32)
+				48 : Count (type: System.Int32)
+				4c : OriginalCount (type: System.Int32)
+				50 : BytesRead (type: System.Int32)
+				38 : realcb (type: System.AsyncCallback)
 			methods
-				2788f5d0 : .ctor
-				2788f600 : CBWrapper
-				2788f630 : SetComplete
-				2788f660 : SetComplete
-				2788f690 : SetComplete
-				276e9368 : get_AsyncState
-				276e9398 : get_CompletedSynchronously
-				276e93c8 : get_AsyncWaitHandle
-				276e93f8 : get_IsCompleted
-				2788f6c0 : get_Exception
-				2788f6f0 : get_Done
-				2788f720 : set_Done"""
+				178788c7ca0 : .ctor (cb: System.AsyncCallback; state: object):System.Void
+				178788c7cc8 : CBWrapper (ares: System.IAsyncResult):System.Void
+				178788c7d18 : SetComplete (e: System.Exception; nbytes: int):System.Void
+				178788c7cf0 : SetComplete (e: System.Exception):System.Void
+				178788c7d40 : SetComplete (e: System.Exception; nbytes: int; synch: bool):System.Void
+				178788c7d68 : get_AsyncState ():System.Object
+				178788c7db8 : get_AsyncWaitHandle ():System.Threading.WaitHandle
+				178788c7d90 : get_CompletedSynchronously ():System.Boolean
+				178788c7e30 : get_Done ():System.Boolean
+				178788c7e08 : get_Exception ():System.Exception
+				178788c7de0 : get_IsCompleted ():System.Boolean
+				178788c7e58 : set_Done (value: bool):System.Void
+			base class"""
+
+# translation of built-in functions of C# to C++
+# you may set up your own translation here
+BUILT_IN_FUNC = {
+    "System.Byte":      "uint8_t",
+    "System.UInt16":    "uint16_t",
+    "System.UInt32":    "uint32_t",
+    "System.UInt64":    "uint64_t",
+    "System.Int16":     "int16_t",
+    "System.Int32":     "int32_t",
+    "System.Int64":     "int64_t",
+    "System.UIntPtr":   "uintptr_t",
+    "System.IntPtr":    "intptr_t",
+    "System.Single":    "float",
+    "System.Void":      "void",
+    "System.Boolean":   "bool",
+    # below are my custom implementations
+    "System.String":    "UnicodeString",
+    "System.Object":    "Object"
+}
 
 # Helper function to parse class name
 def parse_class_name(class_name, is_array = False):
